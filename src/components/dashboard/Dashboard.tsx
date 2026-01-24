@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useDashboardStore } from "@/store";
 import WidgetBuilder from "@/components/widgets/WidgetBuilder";
 import CardWidget from "@/components/widgets/CardWidget";
+import TableWidget from "@/components/widgets/TableWidget";
+
 
 export default function Dashboard() {
   const widgets = useDashboardStore((state) => state.widgets);
@@ -50,8 +52,9 @@ export default function Dashboard() {
 
       <div className="grid grid-cols-12 gap-6">
         {widgets.map((widget) => (
-          <div key={widget.id} className="col-span-4">
+          <div key={widget.id} className="col-span-12 lg:col-span-6">
             {widget.type === "card" && <CardWidget widget={widget} />}
+            {widget.type === "table" && <TableWidget widget={widget} />}
           </div>
         ))}
       </div>
