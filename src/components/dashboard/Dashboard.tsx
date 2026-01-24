@@ -5,6 +5,7 @@ import { useDashboardStore } from "@/store";
 import WidgetBuilder from "@/components/widgets/WidgetBuilder";
 import CardWidget from "@/components/widgets/CardWidget";
 import TableWidget from "@/components/widgets/TableWidget";
+import ChartWidget from "@/components/widgets/ChartWidget";
 
 
 export default function Dashboard() {
@@ -55,6 +56,7 @@ export default function Dashboard() {
           <div key={widget.id} className="col-span-12 lg:col-span-6">
             {widget.type === "card" && <CardWidget widget={widget} />}
             {widget.type === "table" && <TableWidget widget={widget} />}
+            {widget.type === "chart" && <ChartWidget widget={widget} />}
           </div>
         ))}
       </div>
