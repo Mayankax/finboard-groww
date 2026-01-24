@@ -13,7 +13,7 @@ export default function CardWidget({ widget }: CardWidgetProps) {
   const { data, isLoading, error } = useWidgetData(widget);
 
   return (
-    <WidgetContainer title={widget.displayConfig.title}>
+    <WidgetContainer title={widget.displayConfig.title} widgetId={widget.id}>
       {/* Loading */}
       {isLoading && (
         <p className="text-sm text-blue-400">Loading data...</p>

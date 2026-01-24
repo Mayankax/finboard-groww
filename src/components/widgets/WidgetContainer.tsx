@@ -1,16 +1,24 @@
 "use client";
 
 import { ReactNode } from "react";
+import WidgetHeader from "./WidgetHeader";
+import { useDashboardStore } from "@/store";
 
 interface WidgetContainerProps {
   title: string;
+  widgetId: string;
   children: ReactNode;
 }
 
 export default function WidgetContainer({
   title,
+  widgetId,
   children,
 }: WidgetContainerProps) {
+  const removeWidget = useDashboardStore(
+    (state) => state.removeWidget
+  );
+
   return (
     <div
       className="
@@ -24,9 +32,10 @@ export default function WidgetContainer({
         flex flex-col
       "
     >
-      <h3 className="text-lg font-semibold text-white mb-3">
-        {title}
-      </h3>
+      <WidgetHeader
+        title={title}
+        onRemove={() => removeWidget(widgetId)}
+      />
 
       <div className="flex-1 overflow-auto">
         {children}

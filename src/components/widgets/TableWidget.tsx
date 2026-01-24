@@ -58,7 +58,7 @@ export default function TableWidget({ widget }: TableWidgetProps) {
   );
 
   return (
-    <WidgetContainer title={widget.displayConfig.title}>
+    <WidgetContainer title={widget.displayConfig.title} widgetId={widget.id}>
       {/* Search */}
       <input
         value={search}

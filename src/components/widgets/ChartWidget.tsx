@@ -44,7 +44,7 @@ export default function ChartWidget({ widget }: ChartWidgetProps) {
   }, [data, widget.fieldMappings]);
 
   return (
-    <WidgetContainer title={widget.displayConfig.title}>
+    <WidgetContainer title={widget.displayConfig.title} widgetId={widget.id}>
       {isLoading && <p className="text-sm text-blue-400">Loading chart...</p>}
       {error && <p className="text-sm text-red-400">Failed to load chart data</p>}
       {!isLoading && chartData.length === 0 && (
@@ -53,7 +53,7 @@ export default function ChartWidget({ widget }: ChartWidgetProps) {
 
       {/* ✅ give chart its own height */}
       {chartData.length > 0 && (
-        <div className="w-full h-[260px]">
+        <div className="w-full h-65">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData}>
               <XAxis dataKey="index" />
