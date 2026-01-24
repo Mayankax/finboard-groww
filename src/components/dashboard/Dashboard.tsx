@@ -42,20 +42,51 @@ export default function Dashboard() {
   if (widgets.length === 0) {
     return (
       <>
-        <div className="flex flex-col items-center justify-center h-full text-center gap-4">
-          <h2 className="text-2xl font-semibold text-white">
-            Your dashboard is empty
-          </h2>
-          <p className="text-gray-400 max-w-md">
-            Start building your personalized finance dashboard by adding widgets.
-          </p>
+        <div className="flex items-center justify-center min-h-[70vh]">
+          <div className="max-w-xl text-center">
+            <h1 className="text-4xl font-semibold tracking-tight mb-4">
+              Build Your Finance Dashboard
+            </h1>
 
-          <button
-            onClick={() => setIsBuilderOpen(true)}
-            className="px-6 py-3 rounded-xl bg-green-500 text-black font-semibold
-                    hover:bg-green-400 transition shadow-lg shadow-green-500/20">
-            + Add your first widget
-          </button>
+            <p className="text-gray-400 text-base mb-8 leading-relaxed">
+              Create a personalized dashboard by connecting live financial APIs
+              and visualizing real-time stock data using cards, tables, and charts.
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+              <div className="bg-zinc-900/60 border border-zinc-800 rounded-xl p-4">
+                <p className="text-sm font-medium mb-1">📊 Charts</p>
+                <p className="text-xs text-gray-400">
+                  Visualize price trends and performance
+                </p>
+              </div>
+
+              <div className="bg-zinc-900/60 border border-zinc-800 rounded-xl p-4">
+                <p className="text-sm font-medium mb-1">📋 Tables</p>
+                <p className="text-xs text-gray-400">
+                  Analyze structured stock data
+                </p>
+              </div>
+
+              <div className="bg-zinc-900/60 border border-zinc-800 rounded-xl p-4">
+                <p className="text-sm font-medium mb-1">💳 Cards</p>
+                <p className="text-xs text-gray-400">
+                  Track key financial metrics
+                </p>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setIsBuilderOpen(true)}
+              className="
+                px-8 py-3 rounded-xl bg-green-500 text-black
+                font-semibold hover:bg-green-400 transition
+                shadow-lg shadow-green-500/30
+              "
+            >
+              + Add Your First Widget
+            </button>
+          </div>
         </div>
 
         <WidgetBuilder
