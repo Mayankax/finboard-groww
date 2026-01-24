@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import Modal from "@/components/ui/Modal";
-import { WidgetType } from "@/types/widget";
+import { WidgetType, FieldMapping } from "@/types/widget";
 import { useDashboardStore } from "@/store";
 import { useTestApi } from "@/hooks/useTestApi";
+import JsonExplorer from "./JsonExplorer";
 
 interface WidgetBuilderProps {
   isOpen: boolean;
@@ -25,8 +26,28 @@ export default function WidgetBuilder({
 
   const { data, isLoading, error } = useTestApi(endpoint, testApi);
 
+  const [fields, setFields] = useState<FieldMapping[]>([]);
+
+  /* ---------------- Field Selection ---------------- */
+
+  const handleFieldSelect = (path: string, value: any) => {
+    setFields((prev) => {
+      if (prev.find((f) => f.jsonPath === path)) return prev;
+
+      return [
+        ...prev,
+        {
+          label: path.split(".").pop() || path,
+          jsonPath: path,
+        },
+      ];
+    });
+  };
+
+  /* ---------------- Create Widget ---------------- */
+
   const handleCreate = () => {
-    if (!title.trim()) return;
+    if (!title.trim() || !endpoint || fields.length === 0) return;
 
     addWidget({
       id: crypto.randomUUID(),
@@ -35,15 +56,19 @@ export default function WidgetBuilder({
         endpoint,
         refreshInterval: 60,
       },
-      fieldMappings: [],
+      fieldMappings: fields,
       displayConfig: {
         title,
       },
       createdAt: Date.now(),
     });
 
+    // Reset state
     setTitle("");
     setType("card");
+    setEndpoint("");
+    setFields([]);
+    setTestApi(false);
     onClose();
   };
 
@@ -89,9 +114,8 @@ export default function WidgetBuilder({
         </div>
       </div>
 
-
       {/* API Endpoint */}
-      <div className="mb-4">
+      <div className="mb-3">
         <label className="block text-sm text-gray-400 mb-1">
           API Endpoint
         </label>
@@ -100,6 +124,7 @@ export default function WidgetBuilder({
           onChange={(e) => {
             setEndpoint(e.target.value);
             setTestApi(false);
+            setFields([]);
           }}
           placeholder="https://api.example.com/data"
           className="w-full rounded-lg bg-zinc-800 border border-zinc-700 px-3 py-2 text-white focus:outline-none focus:border-green-500"
@@ -125,12 +150,35 @@ export default function WidgetBuilder({
         </p>
       )}
 
+      {/* JSON Explorer */}
       {data && (
-        <pre className="max-h-40 overflow-auto text-xs bg-black rounded-lg p-3 text-green-400 mb-4">
-          {JSON.stringify(data, null, 2)}
-        </pre>
+        <>
+          <p className="text-sm text-gray-400 mb-2">
+            Select fields to display
+          </p>
+
+          <div className="max-h-48 overflow-auto bg-black rounded-lg p-2 mb-3">
+            <JsonExplorer data={data} onSelect={handleFieldSelect} />
+          </div>
+        </>
       )}
 
+      {/* Selected Fields */}
+      {fields.length > 0 && (
+        <div className="mb-4">
+          <p className="text-sm text-gray-400 mb-2">Selected Fields</p>
+          <div className="flex flex-wrap gap-2">
+            {fields.map((field) => (
+              <span
+                key={field.jsonPath}
+                className="px-2 py-1 text-xs rounded bg-zinc-800 border border-zinc-700"
+              >
+                {field.label}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Actions */}
       <div className="flex justify-end gap-3">
@@ -142,7 +190,8 @@ export default function WidgetBuilder({
         </button>
         <button
           onClick={handleCreate}
-          className="px-5 py-2 rounded-lg bg-green-500 text-black font-medium hover:bg-green-400"
+          disabled={fields.length === 0}
+          className="px-5 py-2 rounded-lg bg-green-500 text-black font-medium hover:bg-green-400 disabled:opacity-50"
         >
           Create Widget
         </button>
