@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useDashboardStore } from "@/store";
 import WidgetBuilder from "@/components/widgets/WidgetBuilder";
+import CardWidget from "@/components/widgets/CardWidget";
 
 export default function Dashboard() {
   const widgets = useDashboardStore((state) => state.widgets);
@@ -49,19 +50,12 @@ export default function Dashboard() {
 
       <div className="grid grid-cols-12 gap-6">
         {widgets.map((widget) => (
-          <div
-            key={widget.id}
-            className="col-span-4 bg-zinc-900 border border-zinc-800 rounded-xl p-4"
-          >
-            <h3 className="text-lg font-medium text-white">
-              {widget.displayConfig.title}
-            </h3>
-            <p className="text-sm text-gray-400 mt-1">
-              Widget type: {widget.type}
-            </p>
+          <div key={widget.id} className="col-span-4">
+            {widget.type === "card" && <CardWidget widget={widget} />}
           </div>
         ))}
       </div>
+
 
       <WidgetBuilder
         isOpen={isBuilderOpen}
