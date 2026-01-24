@@ -6,11 +6,38 @@ import WidgetBuilder from "@/components/widgets/WidgetBuilder";
 import CardWidget from "@/components/widgets/CardWidget";
 import TableWidget from "@/components/widgets/TableWidget";
 import ChartWidget from "@/components/widgets/ChartWidget";
+import {
+  DndContext,
+  closestCenter,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  arrayMove,
+  rectSortingStrategy,
+} from "@dnd-kit/sortable";
+
+import SortableWidget from "./SortableWidget";
+
 
 
 export default function Dashboard() {
   const widgets = useDashboardStore((state) => state.widgets);
   const [isBuilderOpen, setIsBuilderOpen] = useState(false);
+
+  const reorderWidgets = useDashboardStore(
+    (state) => state.reorderWidgets
+  );
+
+  const handleDragEnd = (event: any) => {
+    const { active, over } = event;
+
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = widgets.findIndex((w) => w.id === active.id);
+    const newIndex = widgets.findIndex((w) => w.id === over.id);
+
+    reorderWidgets(arrayMove(widgets, oldIndex, newIndex));
+  };
 
   if (widgets.length === 0) {
     return (
@@ -51,15 +78,30 @@ export default function Dashboard() {
         </button>
       </div>
 
-      <div className="grid grid-cols-12 gap-6">
-        {widgets.map((widget) => (
-          <div key={widget.id} className="col-span-12 lg:col-span-6">
-            {widget.type === "card" && <CardWidget widget={widget} />}
-            {widget.type === "table" && <TableWidget widget={widget} />}
-            {widget.type === "chart" && <ChartWidget widget={widget} />}
+      <DndContext
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext
+          items={widgets.map((w) => w.id)}
+          strategy={rectSortingStrategy}
+        >
+          <div className="grid grid-cols-12 gap-6">
+            {widgets.map((widget) => (
+              <div
+                key={widget.id}
+                className="col-span-12 lg:col-span-6"
+              >
+                <SortableWidget id={widget.id}>
+                  {widget.type === "card" && <CardWidget widget={widget} />}
+                  {widget.type === "table" && <TableWidget widget={widget} />}
+                  {widget.type === "chart" && <ChartWidget widget={widget} />}
+                </SortableWidget>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </SortableContext>
+      </DndContext>
 
 
       <WidgetBuilder

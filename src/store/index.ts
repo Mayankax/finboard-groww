@@ -6,7 +6,9 @@ interface DashboardState {
   widgets: Widget[];
   addWidget: (widget: Widget) => void;
   removeWidget: (id: string) => void;
+  reorderWidgets: (widgets: Widget[]) => void;
 }
+
 
 export const useDashboardStore = create<DashboardState>()(
   persist(
@@ -22,6 +24,11 @@ export const useDashboardStore = create<DashboardState>()(
         set((state) => ({
           widgets: state.widgets.filter((w) => w.id !== id),
         })),
+
+        reorderWidgets: (widgets) =>
+          set(() => ({
+            widgets,
+          })),
     }),
     {
       name: "finboard-dashboard", // key in localStorage
