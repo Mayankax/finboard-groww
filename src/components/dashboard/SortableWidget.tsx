@@ -9,10 +9,7 @@ interface SortableWidgetProps {
   children: ReactNode;
 }
 
-export default function SortableWidget({
-  id,
-  children,
-}: SortableWidgetProps) {
+export default function SortableWidget({ id, children }: SortableWidgetProps) {
   const {
     attributes,
     listeners,
@@ -29,13 +26,16 @@ export default function SortableWidget({
   };
 
   return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-      className="cursor-move"
-    >
+    <div ref={setNodeRef} style={style} className="relative">
+      {/* Drag handle */}
+      <div
+        {...attributes}
+        {...listeners}
+        className="cursor-move text-gray-400 text-sm mb-2 select-none"
+      >
+        ⠿ Drag
+      </div>
+
       {children}
     </div>
   );

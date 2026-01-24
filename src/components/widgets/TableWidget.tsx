@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { Widget } from "@/types/widget";
 import { useWidgetData } from "@/hooks/useWidgetData";
 import { getValueByPath } from "@/utils/getValueByPath";
+import WidgetContainer from "./WidgetContainer";
 
 interface TableWidgetProps {
   widget: Widget;
@@ -21,7 +22,6 @@ export default function TableWidget({ widget }: TableWidgetProps) {
   const rows: any[] = useMemo(() => {
     if (!data) return [];
 
-    // Try common array locations
     if (Array.isArray(data)) return data;
     if (Array.isArray(data.products)) return data.products;
     if (Array.isArray(data.data)) return data.data;
@@ -35,26 +35,30 @@ export default function TableWidget({ widget }: TableWidgetProps) {
 
     return rows.filter((row) =>
       widget.fieldMappings.some((field) => {
-        const normalizedPath = field.jsonPath.split(".").slice(-1).join(".");
-        const value = getValueByPath(row, normalizedPath);
-        return String(value).toLowerCase().includes(search.toLowerCase());
+        const value = getValueByPath(
+          row,
+          field.jsonPath.split(".").slice(-1).join(".")
+        );
+        return String(value ?? "")
+          .toLowerCase()
+          .includes(search.toLowerCase());
       })
     );
   }, [rows, search, widget.fieldMappings]);
 
   // Pagination
-  const totalPages = Math.ceil(filteredRows.length / PAGE_SIZE);
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredRows.length / PAGE_SIZE)
+  );
+
   const paginatedRows = filteredRows.slice(
     (page - 1) * PAGE_SIZE,
     page * PAGE_SIZE
   );
 
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
-      <h3 className="text-lg font-semibold text-white mb-3">
-        {widget.displayConfig.title}
-      </h3>
-
+    <WidgetContainer title={widget.displayConfig.title}>
       {/* Search */}
       <input
         value={search}
@@ -63,7 +67,7 @@ export default function TableWidget({ widget }: TableWidgetProps) {
           setPage(1);
         }}
         placeholder="Search..."
-        className="mb-3 w-full rounded-lg bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm text-white"
+        className="mb-2 w-full rounded-lg bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm text-white"
       />
 
       {/* States */}
@@ -79,14 +83,14 @@ export default function TableWidget({ widget }: TableWidgetProps) {
         <p className="text-sm text-gray-400">No data found</p>
       )}
 
-      {/* Table */}
+      {/* Table scroll area */}
       {paginatedRows.length > 0 && (
-        <div className="overflow-auto">
+        <div className="flex-1 overflow-auto">
           <table className="w-full text-sm border-collapse">
-            <thead>
+            <thead className="sticky top-0 bg-zinc-900">
               <tr className="text-gray-400 border-b border-zinc-700">
                 {widget.fieldMappings.map((field) => (
-                  <th key={field.jsonPath} className="text-left py-2">
+                  <th key={field.jsonPath} className="text-left py-2 px-1">
                     {field.label}
                   </th>
                 ))}
@@ -97,16 +101,19 @@ export default function TableWidget({ widget }: TableWidgetProps) {
               {paginatedRows.map((row, idx) => (
                 <tr
                   key={idx}
-                  className="border-b border-zinc-800 last:border-none"
+                  className="border-b border-zinc-800 last:border-none hover:bg-zinc-900/60 transition"
                 >
                   {widget.fieldMappings.map((field) => (
-                    <td key={field.jsonPath} className="py-2 text-white">
-                        {String(
-                            getValueByPath(
-                            row,
-                            field.jsonPath.split(".").slice(-1).join(".")
-                            ) ?? "--"
-                        )}
+                    <td
+                      key={field.jsonPath}
+                      className="py-1 px-1 text-white"
+                    >
+                      {String(
+                        getValueByPath(
+                          row,
+                          field.jsonPath.split(".").slice(-1).join(".")
+                        ) ?? "--"
+                      )}
                     </td>
                   ))}
                 </tr>
@@ -116,13 +123,16 @@ export default function TableWidget({ widget }: TableWidgetProps) {
         </div>
       )}
 
-      {/* Pagination */}
+      {/* Pagination (fixed at bottom) */}
       {totalPages > 1 && (
-        <div className="flex justify-between items-center mt-4 text-sm">
+        <div className="mt-2 flex justify-between items-center text-sm">
           <button
             disabled={page === 1}
-            onClick={() => setPage((p) => p - 1)}
-            className="px-3 py-1 rounded bg-zinc-800 disabled:opacity-50"
+            onClick={(e) => {
+              e.stopPropagation();
+              setPage((p) => p - 1);
+            }}
+            className="px-3 py-1 rounded bg-zinc-800 hover:bg-zinc-700 disabled:opacity-40 transition"
           >
             Prev
           </button>
@@ -133,13 +143,16 @@ export default function TableWidget({ widget }: TableWidgetProps) {
 
           <button
             disabled={page === totalPages}
-            onClick={() => setPage((p) => p + 1)}
-            className="px-3 py-1 rounded bg-zinc-800 disabled:opacity-50"
+            onClick={(e) => {
+              e.stopPropagation();
+              setPage((p) => p + 1);
+            }}
+            className="px-3 py-1 rounded bg-zinc-800 hover:bg-zinc-700 disabled:opacity-40 transition"
           >
             Next
           </button>
         </div>
       )}
-    </div>
+    </WidgetContainer>
   );
 }

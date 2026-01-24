@@ -52,9 +52,9 @@ export default function Dashboard() {
 
           <button
             onClick={() => setIsBuilderOpen(true)}
-            className="px-5 py-2 rounded-lg bg-green-500 text-black font-medium hover:bg-green-400 transition"
-          >
-            Add Widget
+            className="px-6 py-3 rounded-xl bg-green-500 text-black font-semibold
+                    hover:bg-green-400 transition shadow-lg shadow-green-500/20">
+            + Add your first widget
           </button>
         </div>
 
@@ -68,13 +68,21 @@ export default function Dashboard() {
 
   return (
     <>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-semibold">Dashboard</h1>
+      <div className="flex justify-between items-center mb-8">
+        <div>
+          <h1 className="text-3xl font-semibold tracking-tight">
+            Finance Dashboard
+          </h1>
+          <p className="text-sm text-gray-400 mt-1">
+            Real-time widgets powered by live APIs
+          </p>
+        </div>
+
         <button
           onClick={() => setIsBuilderOpen(true)}
-          className="px-4 py-2 rounded-lg bg-green-500 text-black font-medium"
+          className="px-5 py-2 rounded-lg bg-green-500 text-black font-medium hover:bg-green-400 transition shadow-md shadow-green-500/20"
         >
-          Add Widget
+          + Add Widget
         </button>
       </div>
 
@@ -86,19 +94,26 @@ export default function Dashboard() {
           items={widgets.map((w) => w.id)}
           strategy={rectSortingStrategy}
         >
-          <div className="grid grid-cols-12 gap-6">
-            {widgets.map((widget) => (
-              <div
-                key={widget.id}
-                className="col-span-12 lg:col-span-6"
-              >
-                <SortableWidget id={widget.id}>
-                  {widget.type === "card" && <CardWidget widget={widget} />}
-                  {widget.type === "table" && <TableWidget widget={widget} />}
-                  {widget.type === "chart" && <ChartWidget widget={widget} />}
-                </SortableWidget>
-              </div>
-            ))}
+          <div className="grid grid-cols-12 gap-6 auto-rows-fr">
+            {widgets.map((widget) => {
+              const colSpan =
+                widget.type === "card"
+                  ? "lg:col-span-4"
+                  : "lg:col-span-8";
+
+              return (
+                <div
+                  key={widget.id}
+                  className={`col-span-12 ${colSpan}`}
+                >
+                  <SortableWidget id={widget.id}>
+                    {widget.type === "card" && <CardWidget widget={widget} />}
+                    {widget.type === "table" && <TableWidget widget={widget} />}
+                    {widget.type === "chart" && <ChartWidget widget={widget} />}
+                  </SortableWidget>
+                </div>
+              );
+            })}
           </div>
         </SortableContext>
       </DndContext>

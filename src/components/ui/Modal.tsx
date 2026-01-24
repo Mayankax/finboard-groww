@@ -20,7 +20,8 @@ export default function Modal({ isOpen, onClose, children }: ModalProps) {
       />
 
       {/* Modal content */}
-      <div className="relative z-10 w-full max-w-lg rounded-xl bg-zinc-900 border border-zinc-800 p-6">
+      <div className="relative z-10 w-full max-w-lg rounded-2xl bg-linear-to-br from-zinc-900 to-zinc-950
+                      border border-zinc-800 p-6 shadow-xl shadow-black/50">
         {children}
       </div>
     </div>

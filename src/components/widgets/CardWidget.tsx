@@ -3,6 +3,7 @@
 import { Widget } from "@/types/widget";
 import { useWidgetData } from "@/hooks/useWidgetData";
 import { getValueByPath } from "@/utils/getValueByPath";
+import WidgetContainer from "./WidgetContainer";
 
 interface CardWidgetProps {
   widget: Widget;
@@ -12,11 +13,7 @@ export default function CardWidget({ widget }: CardWidgetProps) {
   const { data, isLoading, error } = useWidgetData(widget);
 
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
-      <h3 className="text-lg font-semibold text-white mb-3">
-        {widget.displayConfig.title}
-      </h3>
-
+    <WidgetContainer title={widget.displayConfig.title}>
       {/* Loading */}
       {isLoading && (
         <p className="text-sm text-blue-400">Loading data...</p>
@@ -36,10 +33,10 @@ export default function CardWidget({ widget }: CardWidgetProps) {
             return (
               <div
                 key={field.jsonPath}
-                className="flex justify-between text-sm"
+                className="flex justify-between text-sm items-center"
               >
                 <span className="text-gray-400">{field.label}</span>
-                <span className="text-white font-medium">
+                <span className="text-white font-semibold tabular-nums">
                   {value !== undefined ? String(value) : "--"}
                 </span>
               </div>
@@ -47,6 +44,10 @@ export default function CardWidget({ widget }: CardWidgetProps) {
           })}
         </div>
       )}
-    </div>
+
+      {!isLoading && !error && !data && (
+        <p className="text-sm text-gray-400">No data available</p>
+      )}
+    </WidgetContainer>
   );
 }
