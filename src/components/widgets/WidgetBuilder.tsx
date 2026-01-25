@@ -27,6 +27,8 @@ export default function WidgetBuilder({
   const { data, isLoading, error } = useTestApi(endpoint, testApi);
 
   const [fields, setFields] = useState<FieldMapping[]>([]);
+  const [refreshInterval, setRefreshInterval] = useState(60);
+
 
   /* ---------------- Field Selection ---------------- */
 
@@ -44,6 +46,12 @@ export default function WidgetBuilder({
     });
   };
 
+  const handleRemoveField = (jsonPath: string) => {
+    setFields((prev) =>
+      prev.filter((field) => field.jsonPath !== jsonPath)
+    );
+  };
+
   /* ---------------- Create Widget ---------------- */
 
   const handleCreate = () => {
@@ -54,7 +62,7 @@ export default function WidgetBuilder({
       type,
       apiConfig: {
         endpoint,
-        refreshInterval: 60,
+        refreshInterval,
       },
       fieldMappings: fields,
       displayConfig: {
@@ -70,6 +78,7 @@ export default function WidgetBuilder({
     setFields([]);
     setTestApi(false);
     onClose();
+    setRefreshInterval(60);
   };
 
   return (
@@ -138,6 +147,8 @@ export default function WidgetBuilder({
       >
         Test API
       </button>
+      
+       
 
       {/* API Status */}
       {isLoading && (
@@ -166,19 +177,53 @@ export default function WidgetBuilder({
       {/* Selected Fields */}
       {fields.length > 0 && (
         <div className="mb-4">
-          <p className="text-sm text-gray-400 mb-2">Selected Fields</p>
+          <p className="text-sm text-gray-400 mb-2">
+            Selected Fields
+          </p>
+
           <div className="flex flex-wrap gap-2">
             {fields.map((field) => (
-              <span
+              <div
                 key={field.jsonPath}
-                className="px-2 py-1 text-xs rounded bg-zinc-800 border border-zinc-700"
+                className="
+                  flex items-center gap-1
+                  px-2 py-1 text-xs
+                  rounded-lg
+                  bg-zinc-800 border border-zinc-700
+                "
               >
-                {field.label}
-              </span>
+                <span>{field.label}</span>
+
+                <button
+                  onClick={() => handleRemoveField(field.jsonPath)}
+                  className="text-gray-400 hover:text-red-400 transition"
+                  title="Remove field"
+                >
+                  ✕
+                </button>
+              </div>
             ))}
           </div>
         </div>
       )}
+
+
+
+      <div className="mb-4">
+        <label className="block text-sm text-gray-400 mb-1">
+          Refresh Interval
+        </label>
+        <select
+          value={refreshInterval}
+          onChange={(e) => setRefreshInterval(Number(e.target.value))}
+          className="w-full rounded-lg bg-zinc-800 border border-zinc-700 px-3 py-2 text-white"
+        >
+          <option value={30}>Every 30 seconds</option>
+          <option value={60}>Every 1 minute</option>
+          <option value={300}>Every 5 minutes</option>
+        </select>
+      </div>
+
 
       {/* Actions */}
       <div className="flex justify-end gap-3">

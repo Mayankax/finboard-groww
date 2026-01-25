@@ -5,6 +5,7 @@ import { Widget } from "@/types/widget";
 import { useWidgetData } from "@/hooks/useWidgetData";
 import { getValueByPath } from "@/utils/getValueByPath";
 import WidgetContainer from "./WidgetContainer";
+import { formatTime } from "@/utils/formatTime";
 
 interface TableWidgetProps {
   widget: Widget;
@@ -13,7 +14,7 @@ interface TableWidgetProps {
 const PAGE_SIZE = 5;
 
 export default function TableWidget({ widget }: TableWidgetProps) {
-  const { data, isLoading, error } = useWidgetData(widget);
+  const { data, isLoading, error, dataUpdatedAt } = useWidgetData(widget);
 
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
@@ -23,6 +24,12 @@ export default function TableWidget({ widget }: TableWidgetProps) {
     if (!data) return [];
 
     if (Array.isArray(data)) return data;
+    if (data.metric && typeof data.metric === "object") {
+      return Object.entries(data.metric).map(([key, value]) => ({
+        metric: key,
+        value: value,
+      }));
+    }
     if (Array.isArray(data.products)) return data.products;
     if (Array.isArray(data.data)) return data.data;
 
@@ -80,7 +87,7 @@ export default function TableWidget({ widget }: TableWidgetProps) {
       )}
 
       {!isLoading && paginatedRows.length === 0 && (
-        <p className="text-sm text-gray-400">No data found</p>
+        <p className="text-sm text-gray-400">No matching records found</p>
       )}
 
       {/* Table scroll area */}
@@ -151,6 +158,11 @@ export default function TableWidget({ widget }: TableWidgetProps) {
           >
             Next
           </button>
+        </div>
+      )}
+      {data && (
+        <div className="mt-3 pt-2 text-xs text-gray-500 border-t border-zinc-800">
+          Last updated {formatTime(dataUpdatedAt)}
         </div>
       )}
     </WidgetContainer>
