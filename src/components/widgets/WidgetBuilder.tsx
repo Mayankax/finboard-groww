@@ -83,164 +83,162 @@ export default function WidgetBuilder({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <h2 className="text-xl font-semibold text-white mb-4">
-        Add New Widget
-      </h2>
+      <div className="flex flex-col max-h-[90vh] w-full">
 
-      {/* Widget Title */}
-      <div className="mb-4">
-        <label className="block text-sm text-gray-400 mb-1">
-          Widget Title
-        </label>
-        <input
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="e.g. Reliance Stock Overview"
-          className="w-full rounded-lg bg-zinc-800 border border-zinc-700 px-3 py-2 text-white focus:outline-none focus:border-green-500"
-        />
-      </div>
-
-      {/* Widget Type */}
-      <div className="mb-6">
-        <label className="block text-sm text-gray-400 mb-2">
-          Widget Type
-        </label>
-        <div className="flex gap-3">
-          {(["card", "table", "chart"] as WidgetType[]).map((t) => (
-            <button
-              key={t}
-              onClick={() => setType(t)}
-              className={`px-4 py-2 rounded-lg border transition
-                ${
-                  type === t
-                    ? "bg-green-500 text-black border-green-500"
-                    : "bg-zinc-800 text-gray-300 border-zinc-700 hover:border-zinc-500"
-                }`}
-            >
-              {t.toUpperCase()}
-            </button>
-          ))}
+        {/* HEADER */}
+        <div className="pb-3 border-b border-zinc-800">
+          <h2 className="text-xl font-semibold text-white">
+            Add New Widget
+          </h2>
         </div>
-      </div>
 
-      {/* API Endpoint */}
-      <div className="mb-3">
-        <label className="block text-sm text-gray-400 mb-1">
-          API Endpoint
-        </label>
-        <input
-          value={endpoint}
-          onChange={(e) => {
-            setEndpoint(e.target.value);
-            setTestApi(false);
-            setFields([]);
-          }}
-          placeholder="https://api.example.com/data"
-          className="w-full rounded-lg bg-zinc-800 border border-zinc-700 px-3 py-2 text-white focus:outline-none focus:border-green-500"
-        />
-      </div>
+        {/* ✅ SCROLLABLE CONTENT */}
+        <div className="flex-1 overflow-y-auto pr-1 mt-4 space-y-4">
 
-      <button
-        onClick={() => setTestApi(true)}
-        disabled={!endpoint}
-        className="mb-4 px-4 py-2 rounded-lg bg-zinc-700 text-white hover:bg-zinc-600 disabled:opacity-50"
-      >
-        Test API
-      </button>
-      
-       
-
-      {/* API Status */}
-      {isLoading && (
-        <p className="text-sm text-blue-400 mb-2">Testing API...</p>
-      )}
-
-      {error && (
-        <p className="text-sm text-red-400 mb-2">
-          Failed to fetch API. Please check the endpoint or API key.
-        </p>
-      )}
-
-      {/* JSON Explorer */}
-      {data && (
-        <>
-          <p className="text-sm text-gray-400 mb-2">
-            Select fields to display
-          </p>
-
-          <div className="max-h-42 overflow-auto bg-black rounded-lg p-2 mb-3">
-            <JsonExplorer data={data} onSelect={handleFieldSelect} />
+          {/* Widget Title */}
+          <div>
+            <label className="block text-sm text-gray-400 mb-1">
+              Widget Title
+            </label>
+            <input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="e.g. Reliance Stock Overview"
+              className="w-full rounded-lg bg-zinc-800 border border-zinc-700 px-3 py-2 text-white"
+            />
           </div>
-        </>
-      )}
 
-      {/* Selected Fields */}
-      {fields.length > 0 && (
-        <div className="mb-4">
-          <p className="text-sm text-gray-400 mb-2">
-            Selected Fields
-          </p>
-
-          <div className="flex flex-wrap gap-2">
-            {fields.map((field) => (
-              <div
-                key={field.jsonPath}
-                className="
-                  flex items-center gap-1
-                  px-2 py-1 text-xs
-                  rounded-lg
-                  bg-zinc-800 border border-zinc-700
-                "
-              >
-                <span>{field.label}</span>
-
+          {/* Widget Type */}
+          <div>
+            <label className="block text-sm text-gray-400 mb-2">
+              Widget Type
+            </label>
+            <div className="flex gap-3">
+              {(["card", "table", "chart"] as WidgetType[]).map((t) => (
                 <button
-                  onClick={() => handleRemoveField(field.jsonPath)}
-                  className="text-gray-400 hover:text-red-400 transition"
-                  title="Remove field"
+                  key={t}
+                  onClick={() => setType(t)}
+                  className={`px-4 py-2 rounded-lg border transition
+                    ${
+                      type === t
+                        ? "bg-green-500 text-black border-green-500"
+                        : "bg-zinc-800 text-gray-300 border-zinc-700"
+                    }`}
                 >
-                  ✕
+                  {t.toUpperCase()}
                 </button>
+              ))}
+            </div>
+          </div>
+
+          {/* API Endpoint */}
+          <div>
+            <label className="block text-sm text-gray-400 mb-1">
+              API Endpoint
+            </label>
+            <input
+              value={endpoint}
+              onChange={(e) => {
+                setEndpoint(e.target.value);
+                setTestApi(false);
+                setFields([]);
+              }}
+              className="w-full rounded-lg bg-zinc-800 border border-zinc-700 px-3 py-2 text-white"
+            />
+          </div>
+
+          <button
+            onClick={() => setTestApi(true)}
+            disabled={!endpoint}
+            className="px-4 py-2 rounded-lg bg-zinc-700 text-white"
+          >
+            Test API
+          </button>
+
+          {isLoading && (
+            <p className="text-sm text-blue-400">Testing API...</p>
+          )}
+
+          {error && (
+            <p className="text-sm text-red-400">
+              Failed to fetch API.
+            </p>
+          )}
+
+          {/* JSON Explorer */}
+          {data && (
+            <>
+              <p className="text-sm text-gray-400">
+                Select fields to display
+              </p>
+
+              <div className="max-h-60 overflow-y-auto bg-black rounded-lg p-2 border border-zinc-800">
+                <JsonExplorer data={data} onSelect={handleFieldSelect} />
               </div>
-            ))}
+            </>
+          )}
+
+          {/* Selected Fields */}
+          {fields.length > 0 && (
+            <div>
+              <p className="text-sm text-gray-400 mb-2">
+                Selected Fields
+              </p>
+
+              <div className="flex flex-wrap gap-2">
+                {fields.map((field) => (
+                  <div
+                    key={field.jsonPath}
+                    className="flex items-center gap-1 px-2 py-1 text-xs rounded-lg bg-zinc-800 border border-zinc-700"
+                  >
+                    <span>{field.label}</span>
+                    <button
+                      onClick={() => handleRemoveField(field.jsonPath)}
+                      className="text-gray-400 hover:text-red-400"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Refresh Interval */}
+          <div>
+            <label className="block text-sm text-gray-400 mb-1">
+              Refresh Interval
+            </label>
+            <select
+              value={refreshInterval}
+              onChange={(e) => setRefreshInterval(Number(e.target.value))}
+              className="w-full rounded-lg bg-zinc-800 border border-zinc-700 px-3 py-2 text-white"
+            >
+              <option value={30}>Every 30 seconds</option>
+              <option value={60}>Every 1 minute</option>
+              <option value={300}>Every 5 minutes</option>
+            </select>
           </div>
         </div>
-      )}
 
-
-
-      <div className="mb-4">
-        <label className="block text-sm text-gray-400 mb-1">
-          Refresh Interval
-        </label>
-        <select
-          value={refreshInterval}
-          onChange={(e) => setRefreshInterval(Number(e.target.value))}
-          className="w-full rounded-lg bg-zinc-800 border border-zinc-700 px-3 py-2 text-white"
-        >
-          <option value={30}>Every 30 seconds</option>
-          <option value={60}>Every 1 minute</option>
-          <option value={300}>Every 5 minutes</option>
-        </select>
-      </div>
-
-
-      {/* Actions */}
-      <div className="flex justify-end gap-3">
-        <button
-          onClick={onClose}
-          className="px-4 py-2 rounded-lg text-gray-300 hover:text-white"
-        >
-          Cancel
-        </button>
-        <button
-          onClick={handleCreate}
-          disabled={fields.length === 0}
-          className="px-5 py-2 rounded-lg bg-green-500 text-black font-medium hover:bg-green-400 disabled:opacity-50"
-        >
-          Create Widget
-        </button>
+        {/* FOOTER (fixed) */}
+        <div className="pt-3 border-t border-zinc-800 flex justify-end gap-3 mt-3">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 text-gray-300"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleCreate}
+            disabled={fields.length === 0}
+            className="px-5 py-2 rounded-lg bg-green-500 text-black"
+          >
+            Create Widget
+          </button>
+        </div>
       </div>
     </Modal>
   );
+
 }
