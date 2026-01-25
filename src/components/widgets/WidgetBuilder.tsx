@@ -168,7 +168,7 @@ export default function WidgetBuilder({
             Select fields to display
           </p>
 
-          <div className="max-h-48 overflow-auto bg-black rounded-lg p-2 mb-3">
+          <div className="max-h-42 overflow-auto bg-black rounded-lg p-2 mb-3">
             <JsonExplorer data={data} onSelect={handleFieldSelect} />
           </div>
         </>
