@@ -42,50 +42,77 @@ export default function Dashboard() {
   if (widgets.length === 0) {
     return (
       <>
-        <div className="flex items-center justify-center min-h-[70vh]">
-          <div className="max-w-xl text-center">
-            <h1 className="text-4xl font-semibold tracking-tight mb-4">
-              Build Your Finance Dashboard
+        <div className="relative flex items-center justify-center min-h-[80vh] px-6">
+          {/* subtle background glow */}
+          <div className="absolute inset-0 -z-10 bg-linear-to-br from-green-500/10 via-transparent to-transparent blur-3xl" />
+
+          <div className="max-w-3xl text-center">
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-1 mb-6 rounded-full
+                            bg-green-500/10 border border-green-500/20 text-green-400 text-sm">
+              <span>⚡</span>
+              <span>Customizable Finance Dashboard</span>
+            </div>
+
+            {/* Main heading */}
+            <h1 className="text-5xl sm:text-6xl font-semibold tracking-tight mb-6">
+              Build your own
+              <span className="block text-green-400">
+                real-time finance dashboard
+              </span>
             </h1>
 
-            <p className="text-gray-400 text-base mb-8 leading-relaxed">
-              Create a personalized dashboard by connecting live financial APIs
-              and visualizing real-time stock data using cards, tables, and charts.
+            {/* Subtext */}
+            <p className="text-gray-400 text-lg leading-relaxed max-w-2xl mx-auto mb-12">
+              Connect live financial APIs, select exactly the data you care about,
+              and visualize markets using powerful cards, tables, and charts —
+              all in one place.
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
-              <div className="bg-zinc-900/60 border border-zinc-800 rounded-xl p-4">
-                <p className="text-sm font-medium mb-1">📊 Charts</p>
-                <p className="text-xs text-gray-400">
-                  Visualize price trends and performance
+            {/* Feature highlights */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-14">
+              <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-5 text-left hover:border-zinc-700 transition">
+                <p className="text-sm font-medium mb-1">📊 Interactive Charts</p>
+                <p className="text-sm text-gray-400">
+                  Track stock prices and trends across different time intervals.
                 </p>
               </div>
 
-              <div className="bg-zinc-900/60 border border-zinc-800 rounded-xl p-4">
-                <p className="text-sm font-medium mb-1">📋 Tables</p>
-                <p className="text-xs text-gray-400">
-                  Analyze structured stock data
+              <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-5 text-left hover:border-zinc-700 transition">
+                <p className="text-sm font-medium mb-1">📋 Smart Tables</p>
+                <p className="text-sm text-gray-400">
+                  View structured financial data with search and pagination.
                 </p>
               </div>
 
-              <div className="bg-zinc-900/60 border border-zinc-800 rounded-xl p-4">
-                <p className="text-sm font-medium mb-1">💳 Cards</p>
-                <p className="text-xs text-gray-400">
-                  Track key financial metrics
+              <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-5 text-left hover:border-zinc-700 transition">
+                <p className="text-sm font-medium mb-1">💳 Metric Cards</p>
+                <p className="text-sm text-gray-400">
+                  Monitor key financial metrics at a glance.
                 </p>
               </div>
             </div>
 
-            <button
-              onClick={() => setIsBuilderOpen(true)}
-              className="
-                px-8 py-3 rounded-xl bg-green-500 text-black
-                font-semibold hover:bg-green-400 transition
-                shadow-lg shadow-green-500/30
-              "
-            >
-              + Add Your First Widget
-            </button>
+            {/* Primary CTA */}
+            <div className="flex items-center justify-center gap-4">
+              <button
+                onClick={() => setIsBuilderOpen(true)}
+                className="
+                  px-7 py-4 rounded-2xl
+                  bg-green-500 text-black
+                  font-semibold text-lg
+                  hover:bg-green-400 transition
+                  shadow-xl shadow-green-500/30
+                "
+              >
+                + Create Your First Widget
+              </button>
+            </div>
+
+            {/* Secondary hint */}
+            <p className="mt-6 text-sm text-gray-500">
+              Powered by real financial APIs • Secure • Fully customizable
+            </p>
           </div>
         </div>
 
@@ -96,6 +123,7 @@ export default function Dashboard() {
       </>
     );
   }
+
 
   return (
     <>
