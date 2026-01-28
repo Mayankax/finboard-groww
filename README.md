@@ -38,7 +38,8 @@ NEXT_PUBLIC_FINNHUB_API_KEY=your_token_here
 Example endpoints to try:
 - Quote: `https://finnhub.io/api/v1/quote?symbol=AAPL`
 - Peers (renders a table): `https://finnhub.io/api/v1/stock/peers?symbol=AAPL`
-- Candles (renders a chart): `https://finnhub.io/api/v1/stock/candle?symbol=AAPL&resolution=D&count=30`
+- Candles (renders a chart): `https://finnhub.io/api/v1/quote?symbol=AAPL` 
+        (Select c)
 
 ### Available scripts
 - `npm run dev` – start the dev server
